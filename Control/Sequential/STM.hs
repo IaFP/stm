@@ -9,6 +9,9 @@
 #elif __GLASGOW_HASKELL__ >= 701
 {-# LANGUAGE Trustworthy #-}
 #endif
+#if __GLASGOW_HASKELL__ >= 810
+{-# LANGUAGE PartialTypeConstructors #-}
+#endif
 
 -- #hide
 module Control.Sequential.STM (

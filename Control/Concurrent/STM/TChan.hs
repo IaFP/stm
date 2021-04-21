@@ -4,6 +4,9 @@
 #if __GLASGOW_HASKELL__ >= 701
 {-# LANGUAGE Trustworthy #-}
 #endif
+#if __GLASGOW_HASKELL__ >= 810
+{-# LANGUAGE PartialTypeConstructors, TypeOperators, TypeFamilies #-}
+#endif
 
 -----------------------------------------------------------------------------
 -- |
@@ -48,6 +51,10 @@ module Control.Concurrent.STM.TChan (
 import GHC.Conc
 
 import Data.Typeable (Typeable)
+#if MIN_VERSION_base(4,14,0)
+import GHC.Types(type (@@))
+#endif
+
 
 #define _UPK_(x) {-# UNPACK #-} !(x)
 
@@ -58,6 +65,9 @@ data TChan a = TChan _UPK_(TVar (TVarList a))
 
 type TVarList a = TVar (TList a)
 data TList a = TNil | TCons a _UPK_(TVarList a)
+#if MIN_VERSION_base(4,14,0)
+type instance TList @@ a = ()
+#endif
 
 -- |Build and return a new instance of 'TChan'
 newTChan :: STM (TChan a)

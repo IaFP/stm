@@ -22,3 +22,4 @@
 /testsuite/dist-newstyle/
 /dist-newstyle/
 .ghc.environment.*
+*.hs.bak

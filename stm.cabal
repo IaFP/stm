@@ -52,6 +52,8 @@ library
     build-depends:
         base  >= 4.3 && < 4.15,
         array >= 0.3 && < 0.6
+    if impl(ghc >= 8.10)
+        build-depends: ghc-prim >= 0.6.1
 
     exposed-modules:
         Control.Concurrent.STM
