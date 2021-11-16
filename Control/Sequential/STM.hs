@@ -4,9 +4,9 @@
 
 {-# LANGUAGE CPP #-}
 
-#if __GLASGOW_HASKELL__ >= 709
+#if __GLASGOW_HASKELL__ >= 709 && __GLASGOW_HASKELL__ < 810
 {-# LANGUAGE Safe #-}
-#elif __GLASGOW_HASKELL__ >= 701
+#else
 {-# LANGUAGE Trustworthy #-}
 #endif
 #if __GLASGOW_HASKELL__ >= 810
@@ -27,9 +27,15 @@ import Control.Applicative (Applicative(pure, (<*>)))
 #endif
 import Control.Exception
 import Data.IORef
+#if MIN_VERSION_base(4,14,0)
+import GHC.Types (Total)
+#endif
 
 -- The reference contains a rollback action to be executed on exceptions
 newtype STM a = STM (IORef (IO ()) -> IO a)
+#if MIN_VERSION_base(4,14,0)
+instance Total STM
+#endif
 
 unSTM :: STM a -> IORef (IO ()) -> IO a
 unSTM (STM f) = f

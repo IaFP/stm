@@ -59,15 +59,16 @@ import GHC.Types(type (@@))
 #define _UPK_(x) {-# UNPACK #-} !(x)
 
 -- | 'TChan' is an abstract type representing an unbounded FIFO channel.
-data TChan a = TChan _UPK_(TVar (TVarList a))
-                     _UPK_(TVar (TVarList a))
+data TChan a = TChan _UPK_(TVar (TVar (TList a)))
+                     _UPK_(TVar (TVar (TList a)))
   deriving (Eq, Typeable)
 
 type TVarList a = TVar (TList a)
-data TList a = TNil | TCons a _UPK_(TVarList a)
-#if MIN_VERSION_base(4,14,0)
-type instance TList @@ a = ()
-#endif
+
+data TList a = TNil | TCons a _UPK_(TVar (TList a))
+-- #if MIN_VERSION_base(4,14,0)
+-- type instance TList @@ a = ()
+-- #endif
 
 -- |Build and return a new instance of 'TChan'
 newTChan :: STM (TChan a)
