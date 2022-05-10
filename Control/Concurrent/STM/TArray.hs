@@ -26,6 +26,9 @@ import Data.Array (Array, bounds)
 import Data.Array.Base (listArray, arrEleBottom, unsafeAt, MArray(..),
                         IArray(numElements))
 import Data.Ix (rangeSize)
+#if MIN_VERSION_base(4,16,0)
+import GHC.Ix (Ix)
+#endif
 import Data.Typeable (Typeable)
 import Control.Concurrent.STM.TVar (TVar, newTVar, readTVar, writeTVar)
 #ifdef __GLASGOW_HASKELL__
@@ -41,7 +44,11 @@ import Control.Sequential.STM (STM)
 -- but it may be replaced by a more efficient implementation in the future
 -- (the interface will remain the same, however).
 --
-newtype TArray i e = TArray (Array i (TVar e)) deriving (Eq, Typeable)
+newtype
+#if MIN_VERSION_base(4,16,0)
+  Ix i =>
+#endif
+  TArray i e = TArray (Array i (TVar e)) deriving (Eq, Typeable)
 
 instance MArray TArray e STM where
     getBounds (TArray a) = return (bounds a)
